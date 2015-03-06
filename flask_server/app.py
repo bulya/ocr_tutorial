@@ -2,6 +2,7 @@ import os
 import logging
 from logging import Formatter, FileHandler
 from flask import Flask, request, jsonify, render_template
+from werkzeug.contrib.fixers import ProxyFix
 
 from ocr import process_image
 
@@ -49,6 +50,7 @@ if not app.debug:
     app.logger.addHandler(file_handler)
     app.logger.info('errors')
 
+app.wsgi_app = ProxyFix(app.wsgi_app)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
